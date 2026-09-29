@@ -57,3 +57,18 @@ def get_task(task_id: int):
             return task
 
     return {"message": "Task not found"}
+
+
+
+
+@app.get("/tasks")
+def get_tasks(completed: bool | None = None):
+    if completed is None:
+        return tasks
+
+    filtered_tasks = [
+        task for task in tasks
+        if task["completed"] == completed
+    ]
+
+    return filtered_tasks
