@@ -72,3 +72,55 @@ def get_tasks(completed: bool | None = None):
     ]
 
     return filtered_tasks
+
+
+
+from pydantic import BaseModel
+
+
+class TaskCreate(BaseModel):
+    title: str
+    description: str
+    completed: bool = False
+
+
+
+
+
+
+@app.post("/tasks")
+def create_task(task: TaskCreate):
+    new_task = {
+        "id": len(tasks) + 1,
+        "title": task.title,
+        "description": task.description,
+        "completed": task.completed
+    }
+
+    tasks.append(new_task)
+
+    return new_task
+
+
+
+def create_task(task: TaskCreate):
+
+
+
+
+
+from pydantic import BaseModel, Field
+
+
+class TaskCreate(BaseModel):
+    title: str = Field(
+        min_length=3,
+        max_length=100
+    )
+
+    description: str = Field(
+        min_length=0,
+        max_length=500
+    )
+
+    completed: bool = False
