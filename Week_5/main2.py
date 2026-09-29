@@ -36,3 +36,24 @@ def create_document(doc: Document):
     
     # Return the data (FastAPI automatically converts it to JSON)
     return {"status": "success", "data": doc}
+
+
+
+from fastapi import FastAPI
+
+app = FastAPI()
+
+tasks = [
+    {"id": 1, "title": "Learn Python", "completed": True},
+    {"id": 2, "title": "Learn FastAPI", "completed": False},
+    {"id": 3, "title": "Build a REST API", "completed": False}
+]
+
+
+@app.get("/tasks/{task_id}")
+def get_task(task_id: int):
+    for task in tasks:
+        if task["id"] == task_id:
+            return task
+
+    return {"message": "Task not found"}
