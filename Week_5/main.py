@@ -1,30 +1,21 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from fastapi import FastAPI
 
-from dotenv import load_dotenv
-import os
+from app.database import Base, engine
+from app.models.user import User
+from app.routers import auth
 
-load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+Base.metadata.create_all(bind=engine)
 
-engine = create_engine(DATABASE_URL)
-
-SessionLocal = sessionmaker(
-    bind=engine,
-    autoflush=False,
-    autocommit=False
+app = FastAPI(
+    title="FastAPI Authentication API"
 )
 
-
-class Base(DeclarativeBase):
-    pass
+app.include_router(auth.router)
 
 
-def get_db():
-    db = SessionLocal()
-
-    try:
-        yield db
-    finally:
-        db.close()
+@app.get("/")
+def root():
+    return {
+        "message": "FastAPI Auth API"
+    }
